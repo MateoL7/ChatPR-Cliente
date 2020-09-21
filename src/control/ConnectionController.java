@@ -48,7 +48,7 @@ public class ConnectionController implements TCPConnection.OnConnectionListener{
 						alert.initStyle(StageStyle.UTILITY);
 						alert.setTitle("Information");
 						alert.setHeaderText("¡ERROR!");
-						alert.setContentText("Nombre de usuario no disponible");
+						alert.setContentText("Nombre de usuario no válido");
 
 						alert.showAndWait();
 					}

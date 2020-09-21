@@ -128,37 +128,13 @@ public class ChatController implements OnMessageListener{
 
 					);
 			break;
-			//		case "User":
-			//
-			//			Platform.runLater(
-			//
-			//					()->{
-			//						User u = gson.fromJson(msg, User.class);
-			//						ToggleButton tb = new ToggleButton();
-			//						tb.setText(u.getUsername());
-			//						tb.setId(username+"Btt");
-			//						view.getParticipantsVBox().getChildren().add(tb);
-			//						buttons.add(tb);
-			//
-			//					}
-			//
-			//					);
-			//			break;
 		}
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-//
-//	public void exit() {
-//		Gson gson = new Gson();
-//		ConnectionPossible cp = new ConnectionPossible(true);
-//		String json = gson.toJson(cp);
-//		connection.getEmisor().sendMessage(json);
-//	}
-//	
+
 	public void unselect(String name) {
 		for(int i = 0; i< buttons.size();i++) {
 			if(!(buttons.get(i).getText().equalsIgnoreCase(name))) {
