@@ -63,8 +63,7 @@ public class ConnectionController implements TCPConnection.OnConnectionListener{
 			Platform.runLater(
 
 					()->{
-						
-						view.connected(username);
+						view.changeWindow(username);
 					}
 
 					);

@@ -47,8 +47,8 @@ public class ConnectionWindow{
 		return IngresarBtt;
 	}
 
-	public void setStage(Stage pStage) {
-		stage = pStage;
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 
 	public void setScene(Scene scene) {
@@ -62,17 +62,23 @@ public class ConnectionWindow{
 	public void setAnswerLb(Label answerLb) {
 		AnswerLb = answerLb;
 	}
+	
+	public void closeWindow() {
+		((Stage) scene.getWindow()).close();
+	}
 
-	public void connected(String username) {
+	public void changeWindow(String username) {
 
 		try {
-			((Stage) scene.getWindow()).close();
-
+			closeWindow();
+//			ChatWindow c = new ChatWindow();
+//			c.loadWindow(username);
 			//Open the chat window
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChatWindow.fxml"));
 			Parent root = fxmlLoader.load();
 			Stage stage = new Stage();
 			Scene scene = new Scene(root);
+			cw = new ChatWindow();
 			cw = fxmlLoader.getController();
 			cw.setScene(scene);
 			stage.setTitle("Chat Window");
@@ -99,6 +105,20 @@ public class ConnectionWindow{
 			alert.setContentText("Hubo un problema");
 
 			alert.showAndWait();
+		}
+
+	}
+	
+	public void loadWindow(Stage stage) {
+		try {
+			Parent rootContainer = FXMLLoader.load(getClass().getResource("/view/ConnectionWindow.fxml"));
+			scene = new Scene(rootContainer);
+			setStage(stage);
+			stage.setScene(scene);
+			stage.setTitle("PRChat");
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}

@@ -2,10 +2,16 @@ package view;
 
 
 
+import java.io.IOException;
+
+import comm.TCPConnection;
 import control.ChatController;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -18,6 +24,8 @@ public class ChatWindow{
 	//UI Elements
 
 	private Scene scene;
+	
+	private Stage stage;
 	
 	@FXML
     private TextArea ChatArea;
@@ -86,6 +94,31 @@ public class ChatWindow{
 
 	public ToggleButton getTodosBtt() {
 		return todosBtt;
+	}
+	
+	public void loadWindow(String username) {
+		try {
+			setUsername(username);
+			Parent rootContainer = FXMLLoader.load(getClass().getResource("/view/ChatWindow.fxml"));
+			Scene s = new Scene(rootContainer);
+			stage.setScene(s);
+			stage.setTitle("PRChat");
+			stage.show();
+			stage.setOnCloseRequest(
+
+					(e)->{
+
+						TCPConnection.getInstance().closeSocket();
+//						System.out.println("Cierra");
+// 						System.exit(0);
+
+					}
+
+					);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 }

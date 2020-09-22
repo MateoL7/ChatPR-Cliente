@@ -1,5 +1,7 @@
 package main;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,19 +17,8 @@ public class LauncherClient extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ConnectionWindow.fxml"));
-		Parent root = fxmlLoader.load();
-		ConnectionWindow c = fxmlLoader.getController();
-		c.setStage(stage);
-		
-		
-		Scene scene = new Scene(root);
-		stage.setTitle("PRChat");
-		stage.setScene(scene);
-		stage.show();
-		
-		c.setScene(scene);
-		
+		ConnectionWindow c = new ConnectionWindow();
+		c.loadWindow(stage);
 	}
 
 }
