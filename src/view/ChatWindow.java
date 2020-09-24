@@ -4,68 +4,55 @@ package view;
 
 import java.io.IOException;
 
-import comm.TCPConnection;
 import control.ChatController;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 
 
-public class ChatWindow{
-	
-	//UI Elements
+public class ChatWindow extends Stage{
 
-	private Scene scene;
-	
-	private Stage stage;
-	
-	@FXML
-    private TextArea ChatArea;
+	//Components
+	private TextArea ChatArea;
+	private TextField MessageTxt;
+	private Button SendBt;
+	private VBox ParticipantsVBox;
+	private ToggleButton todosBtt;
 
-    @FXML
-    private TextField MessageTxt;
+	//Controller
+	private ChatController control;
 
-    @FXML
-    private Button SendBt;
+	//Constructor
+	public ChatWindow() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatWindow.fxml"));
+			Parent root = loader.load();
 
-    @FXML
-    private VBox ParticipantsVBox;
+			ChatArea = (TextArea) loader.getNamespace().get("ChatArea");
+			MessageTxt = (TextField) loader.getNamespace().get("MessageTxt");
+			SendBt = (Button) loader.getNamespace().get("SendBt");
+			ParticipantsVBox = (VBox) loader.getNamespace().get("ParticipantsVBox");
+			todosBtt = (ToggleButton) loader.getNamespace().get("todosBtt");
 
-    @FXML
-    private Label PersonToChatLB;
-    
-    @FXML
-    private ToggleButton todosBtt;
 
-    private ChatController control;
+			Scene scene = new Scene(root);
+			this.setScene(scene);
+			
+			control = new ChatController(this);
 
-    @FXML
-	public void initialize(){
-    	control = new ChatController(this);
-	}
-
-	public Scene getScene() {
-		return scene;
-	}
-
-	public void setScene(Scene scene) {
-		this.scene = scene;
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public ChatController getControl() {
 		return control;
-	}
-
-	public void setControl(ChatController control) {
-		this.control = control;
 	}
 
 	public TextArea getChatArea() {
@@ -84,41 +71,8 @@ public class ChatWindow{
 		return ParticipantsVBox;
 	}
 
-	public Label getPersonToChatLB() {
-		return PersonToChatLB;
-	}
-
-	public void setUsername(String username) {
-		control.setUsername(username);
-	}
-
 	public ToggleButton getTodosBtt() {
 		return todosBtt;
 	}
-	
-	public void loadWindow(String username) {
-		try {
-			setUsername(username);
-			Parent rootContainer = FXMLLoader.load(getClass().getResource("/view/ChatWindow.fxml"));
-			Scene s = new Scene(rootContainer);
-			stage.setScene(s);
-			stage.setTitle("PRChat");
-			stage.show();
-			stage.setOnCloseRequest(
 
-					(e)->{
-
-						TCPConnection.getInstance().closeSocket();
-//						System.out.println("Cierra");
-// 						System.exit(0);
-
-					}
-
-					);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-	
 }

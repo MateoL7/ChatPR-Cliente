@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.StageStyle;
 import model.ConnectionPossible;
 import model.User;
+import view.ChatWindow;
 import view.ConnectionWindow;
 
 public class ConnectionController implements TCPConnection.OnConnectionListener{
@@ -63,7 +64,10 @@ public class ConnectionController implements TCPConnection.OnConnectionListener{
 			Platform.runLater(
 
 					()->{
-						view.changeWindow(username);
+						ChatWindow chatWindow = new ChatWindow();
+						chatWindow.getControl().setUsername(username);
+						chatWindow.show();
+						view.close();
 					}
 
 					);
