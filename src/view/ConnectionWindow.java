@@ -35,7 +35,7 @@ public class ConnectionWindow extends Stage{
 			cc = new ConnectionController(this);
 
 		} catch(IOException e) {
-
+			e.printStackTrace();
 		}
 	}
 

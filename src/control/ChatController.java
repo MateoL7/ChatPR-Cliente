@@ -36,6 +36,11 @@ public class ChatController implements OnMessageListener{
 		Gson gson = new Gson();
 		ConnectionPossible cp = new ConnectionPossible(true);
 		String confirmation = gson.toJson(cp);
+		view.setOnCloseRequest(
+				(e)->{
+					TCPConnection.getInstance().closeSocket();
+				}
+				);
 
 		connection.getEmisor().sendMessage(confirmation);
 
@@ -56,10 +61,14 @@ public class ChatController implements OnMessageListener{
 
 						view.getMessageTxt().setText("");
 					}else {
+						DirectMessage dm = new DirectMessage(id, msg, id);
+						String sendDM = gson.toJson(dm);
+						connection.getEmisor().sendMessage(sendDM);
+						view.getMessageTxt().setText("");
 						for(int i = 0; i < buttons.size();i++) {
 							if(buttons.get(i).isSelected()) {
-								DirectMessage dm = new DirectMessage(id, msg, buttons.get(i).getText());
-								String sendDM = gson.toJson(dm);
+								dm = new DirectMessage(id, msg, buttons.get(i).getText());
+								sendDM = gson.toJson(dm);
 								connection.getEmisor().sendMessage(sendDM);
 								view.getMessageTxt().setText("");
 							}
@@ -82,15 +91,27 @@ public class ChatController implements OnMessageListener{
 		Generic type = gson.fromJson(msg, Generic.class);
 		switch (type.getType()) {
 		case "Message":
-			//Poner los mensajes en el Area
-			Platform.runLater(
+			Message msgObj = gson.fromJson(msg, Message.class);
+			String from1 = msgObj.getId();
+			if(from1.equalsIgnoreCase(username)) {
+				Platform.runLater(
 
-					()->{
-						Message msgObj = gson.fromJson(msg, Message.class);
-						view.getChatArea().appendText(msgObj.getId() + " : "+msgObj.getBody()+"\n");
-					}
+						()->{
 
-					);
+							view.getChatArea().appendText("Yo : "+msgObj.getBody()+"\n");
+						}
+
+						);
+			}else {
+				Platform.runLater(
+
+						()->{
+
+							view.getChatArea().appendText(msgObj.getId() + " : "+msgObj.getBody()+"\n");
+						}
+
+						);
+			}
 			break;
 		case "Members":
 			Members m = gson.fromJson(msg, Members.class);
@@ -102,11 +123,14 @@ public class ChatController implements OnMessageListener{
 						view.getParticipantsVBox().getChildren().add(view.getTodosBtt());
 						view.getTodosBtt().setSelected(true);
 						for(int i = 0; i<members.size();i++) {
+							String name = members.get(i).getUsername();
 							ToggleButton tb = new ToggleButton();
-							tb.setText(members.get(i).getUsername());
-							tb.setId(members.get(i).getUsername()+"Btt");
+							if(name.equalsIgnoreCase(username)) {
+								name = name + " (Yo)";
+								tb.setSelected(true);
+							}
+							tb.setText(name);
 							view.getParticipantsVBox().getChildren().add(tb);
-							tb.setSelected(false);
 							buttons.add(tb);
 						}
 
@@ -119,14 +143,25 @@ public class ChatController implements OnMessageListener{
 			DirectMessage theMsg = gson.fromJson(msg, DirectMessage.class);
 			String from = theMsg.getFromClient();
 			String body = theMsg.getBody();
+			String to = theMsg.getToClient();
+			if(from.equalsIgnoreCase(to)) {
+				Platform.runLater(
 
-			Platform.runLater(
+						()->{
+							view.getChatArea().appendText("(Privado) Yo: " + body+"\n");
+						}
 
-					()->{
-						view.getChatArea().appendText("(Privado) " + from+" : " + body+"\n");
-					}
+						);
+			}else {
+				Platform.runLater(
 
-					);
+						()->{
+							view.getChatArea().appendText("(Privado) " + from+" : " + body+"\n");
+						}
+
+						);
+			}
+
 			break;
 		}
 	}
@@ -137,7 +172,7 @@ public class ChatController implements OnMessageListener{
 
 	public void unselect(String name) {
 		for(int i = 0; i< buttons.size();i++) {
-			if(!(buttons.get(i).getText().equalsIgnoreCase(name))) {
+			if(!(buttons.get(i).getText().equalsIgnoreCase(name)) && !(buttons.get(i).getText().contains("(Yo)"))) {
 				buttons.get(i).setSelected(false);
 			}
 		}
